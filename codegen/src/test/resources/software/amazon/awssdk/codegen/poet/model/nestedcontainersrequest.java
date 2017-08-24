@@ -187,7 +187,7 @@ public class NestedContainersRequest extends AmazonWebServiceRequest implements
                 Map<String, ? extends Collection<? extends Collection<String>>> mapOfStringToListOfListOfStrings);
     }
 
-    private static final class BuilderImpl implements Builder {
+    static final class BuilderImpl implements Builder {
         private List<List<String>> listOfListOfStrings;
 
         private List<List<List<String>>> listOfListOfListOfStrings;
@@ -198,9 +198,9 @@ public class NestedContainersRequest extends AmazonWebServiceRequest implements
         }
 
         private BuilderImpl(NestedContainersRequest model) {
-            setListOfListOfStrings(model.listOfListOfStrings);
-            setListOfListOfListOfStrings(model.listOfListOfListOfStrings);
-            setMapOfStringToListOfListOfStrings(model.mapOfStringToListOfListOfStrings);
+            listOfListOfStrings(model.listOfListOfStrings);
+            listOfListOfListOfStrings(model.listOfListOfListOfStrings);
+            mapOfStringToListOfListOfStrings(model.mapOfStringToListOfListOfStrings);
         }
 
         public final Collection<? extends Collection<String>> getListOfListOfStrings() {
