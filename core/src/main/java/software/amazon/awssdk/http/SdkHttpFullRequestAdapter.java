@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import software.amazon.awssdk.Request;
 import software.amazon.awssdk.annotation.ReviewBeforeRelease;
+import software.amazon.awssdk.utils.http.SdkHttpUtils;
 
 /**
  * Adapts a {@link Request} to the new {@link SdkHttpFullRequest} interface.
@@ -35,18 +36,20 @@ public class SdkHttpFullRequestAdapter {
 
     public static SdkHttpFullRequest.Builder toMutableHttpFullRequest(Request<?> request) {
         return SdkHttpFullRequest.builder()
-                                 .content(request.getContent())
-                                 .httpMethod(SdkHttpMethod.fromValue(request.getHttpMethod().name()))
+                                 .protocol(request.getEndpoint().getScheme())
+                                 .host(request.getEndpoint().getHost())
+                                 .port(request.getEndpoint().getPort())
+                                 .encodedPath(SdkHttpUtils.appendUri(request.getEndpoint().getPath(), request.getResourcePath()))
+                                 .rawQueryParameters(request.getParameters())
+                                 .method(SdkHttpMethod.fromValue(request.getHttpMethod().name()))
                                  .headers(adaptHeaders(request.getHeaders()))
-                                 .queryParameters(request.getParameters())
-                                 .endpoint(request.getEndpoint())
-                                 .resourcePath(request.getResourcePath());
+                                 .content(request.getContent());
     }
 
     private static Map<String, List<String>> adaptHeaders(Map<String, String> headers) {
-        Map<String, List<String>> adapated = new HashMap<>(headers.size());
-        headers.forEach((k, v) -> adapated.put(k, singletonList(v)));
-        return adapated;
+        Map<String, List<String>> adapted = new HashMap<>(headers.size());
+        headers.forEach((k, v) -> adapted.put(k, singletonList(v)));
+        return adapted;
     }
 
 }
