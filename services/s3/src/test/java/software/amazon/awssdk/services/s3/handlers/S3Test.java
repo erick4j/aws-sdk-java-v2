@@ -12,21 +12,7 @@
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+package software.amazon.awssdk.services.s3.handlers;
 
-package software.amazon.awssdk;
-
-import java.util.Optional;
-
-/**
- * The base class for all SDK requests.
- *
- * TODO: SDK-specific options on the {@link AmazonWebServiceRequest} should be migrated here as part of the base-model refactor.
- *
- * @see SdkResponse
- */
-public abstract class SdkRequest {
-
-    public <T> Optional<T> getValueForField(String fieldName, Class<T> clazz) {
-        return Optional.empty();
-    }
+public class S3Test {
 }
