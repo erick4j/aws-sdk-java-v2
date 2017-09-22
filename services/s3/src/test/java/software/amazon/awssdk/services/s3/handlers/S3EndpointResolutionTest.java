@@ -65,7 +65,7 @@ public class S3EndpointResolutionTest {
 
         s3Client.listBuckets();
 
-        assertThat(mockHttpClient.getLastRequest().toUri())
+        assertThat(mockHttpClient.getLastRequest().getUri())
                 .as("Uses regional S3 endpoint without bucket")
                 .isEqualTo(URI.create(ENDPOINT_WITHOUT_BUCKET));
 
@@ -84,7 +84,7 @@ public class S3EndpointResolutionTest {
 
         s3Client.listBuckets();
 
-        assertThat(mockHttpClient.getLastRequest().toUri())
+        assertThat(mockHttpClient.getLastRequest().getUri())
                 .as("Uses regional S3 endpoint without bucket")
                 .isEqualTo(URI.create("https://s3.dualstack.ap-south-1.amazonaws.com"));
     }
@@ -101,7 +101,7 @@ public class S3EndpointResolutionTest {
 
         s3Client.listBuckets();
 
-        assertThat(mockHttpClient.getLastRequest().toUri())
+        assertThat(mockHttpClient.getLastRequest().getUri())
                 .as("Uses custom endpoint")
                 .isEqualTo(customEndpoint);
     }
@@ -270,7 +270,7 @@ public class S3EndpointResolutionTest {
 
         s3Client.listBuckets();
 
-        assertThat(mockHttpClient.getLastRequest().toUri())
+        assertThat(mockHttpClient.getLastRequest().getUri())
                 .as("Uses regional S3 endpoint")
                 .isEqualTo(URI.create("https://s3.ap-south-1.amazonaws.com"));
     }
@@ -293,7 +293,7 @@ public class S3EndpointResolutionTest {
      * @param endpoint        Expected endpoint.
      */
     private void assertEndpointMatches(SdkHttpFullRequest capturedRequest, String endpoint) {
-        assertThat(capturedRequest.toUri()).isEqualTo(URI.create(endpoint));
+        assertThat(capturedRequest.getUri()).isEqualTo(URI.create(endpoint));
     }
 
     /**

@@ -113,7 +113,7 @@ public final class RunnableRequest implements AbortableRunnable {
     }
 
     private URI endpoint() {
-        return context.sdkRequest().toUri();
+        return context.sdkRequest().getUri();
     }
 
     private void handleFailure(Supplier<String> msg, Throwable cause) {

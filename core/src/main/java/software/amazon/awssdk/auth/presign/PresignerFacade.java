@@ -72,7 +72,7 @@ public final class PresignerFacade {
                                                                         .build(),
                                                       executionAttributes,
                                                       expirationDate);
-        return invokeSafely(() -> signed.toUri().toURL());
+        return invokeSafely(() -> signed.getUri().toURL());
     }
 
     private void addCustomQueryParams(SdkHttpFullRequest.Builder request, RequestConfig requestConfig) {

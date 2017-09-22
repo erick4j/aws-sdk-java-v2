@@ -111,7 +111,7 @@ abstract class RdsPresignInterceptor<T extends AmazonWebServiceRequest> implemen
 
         requestToPresign = presignRequest(contextToSign, executionAttributes, sourceRegion);
 
-        final String presignedUrl = requestToPresign.toUri().toString();
+        final String presignedUrl = requestToPresign.getUri().toString();
 
         presignableRequest.setPreSignedUrl(presignedUrl);
 

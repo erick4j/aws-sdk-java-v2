@@ -51,7 +51,7 @@ public class ApacheHttpRequestFactory {
     private static final List<String> IGNORE_HEADERS = Arrays.asList(HttpHeaders.CONTENT_LENGTH, HttpHeaders.HOST);
 
     public HttpRequestBase create(final SdkHttpFullRequest request, final ApacheHttpRequestConfig requestConfig) {
-        URI uri = request.toUri();
+        URI uri = request.getUri();
         final HttpRequestBase base = createApacheRequest(request, uri.toString());
         addHeadersToRequest(base, request);
         addRequestConfig(base, request, requestConfig);

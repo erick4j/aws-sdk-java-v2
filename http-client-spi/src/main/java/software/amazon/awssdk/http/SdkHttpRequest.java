@@ -54,7 +54,7 @@ public interface SdkHttpRequest extends SdkHttpHeaders {
      * <p>Important Note: AWS signing DOES NOT include the port when the request is signed if the default port for the protocol is
      * being used. When sending requests via http over port 80 or via https over port 443, the URI or host header MUST NOT include
      * the port or a signature error will be raised from the service for signed requests. HTTP plugin implementers are encouraged
-     * to use the {@link #toUri()} method for generating the URI to use for communicating with AWS to ensure the URI used in the
+     * to use the {@link #getUri()} method for generating the URI to use for communicating with AWS to ensure the URI used in the
      * request matches the URI used during signing.</p>
      *
      * @return The port that should be used for HTTP communication.
@@ -91,7 +91,7 @@ public interface SdkHttpRequest extends SdkHttpHeaders {
      *
      * @return The URI for this request, formatted in the same way the AWS HTTP request signer uses the URI in the signature.
      */
-    default URI toUri() {
+    default URI getUri() {
         // We can't create a URI by simply passing the query parameters into the URI constructor that takes a query string,
         // because URI will re-encode them. Because we want to encode them using our encoder, we have to build the URI
         // ourselves and pass it to the single-argument URI constructor that doesn't perform the encoding.

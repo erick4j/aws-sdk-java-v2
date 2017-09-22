@@ -58,7 +58,7 @@ public class SdkHttpRequestResponseTest {
     }
 
     private String normalizedUri(Consumer<SdkHttpFullRequest.Builder> builderMutator) {
-        return validRequestBuilder().apply(builderMutator).build().toUri().toString();
+        return validRequestBuilder().apply(builderMutator).build().getUri().toString();
     }
 
     @Test
