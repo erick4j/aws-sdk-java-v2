@@ -19,7 +19,6 @@ import static software.amazon.awssdk.utils.CollectionUtils.deepUnmodifiableMap;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -165,7 +164,7 @@ class DefaultSdkHttpFullRequest implements SdkHttpFullRequest {
         private String path;
         private Map<String, List<String>> queryParameters = new LinkedHashMap<>();
         private SdkHttpMethod httpMethod;
-        private Map<String, List<String>> headers = new HashMap<>();
+        private Map<String, List<String>> headers = new LinkedHashMap<>();
         private InputStream content;
 
         Builder() {

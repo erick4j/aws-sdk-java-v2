@@ -18,7 +18,7 @@ package software.amazon.awssdk.http;
 import static software.amazon.awssdk.utils.CollectionUtils.deepUnmodifiableMap;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -80,7 +80,7 @@ class DefaultSdkHttpFullResponse implements SdkHttpFullResponse {
         private String statusText;
         private int statusCode;
         private AbortableInputStream content;
-        private Map<String, List<String>> headers = new HashMap<>();
+        private Map<String, List<String>> headers = new LinkedHashMap<>();
 
         Builder() {
         }

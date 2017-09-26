@@ -24,8 +24,8 @@ import software.amazon.awssdk.config.ClientOverrideConfiguration;
 import software.amazon.awssdk.http.HttpClientDependencies;
 import software.amazon.awssdk.http.SdkHttpFullRequest;
 import software.amazon.awssdk.http.pipeline.MutableRequestToRequestPipeline;
-import software.amazon.awssdk.util.StringUtils;
 import software.amazon.awssdk.util.UserAgentUtils;
+import software.amazon.awssdk.utils.StringUtils;
 
 /**
  * Apply any custom user agent supplied, otherwise instrument the user agent with info about the SDK and environment.
@@ -55,28 +55,29 @@ public class ApplyUserAgentStage implements MutableRequestToRequestPipeline {
         return request.header(HEADER_USER_AGENT, userAgent);
     }
 
-    private String getUserAgent(ClientConfiguration config, final String userAgentMarker) {
+    private String getUserAgent(ClientConfiguration config, String requestUserAgent) {
         ClientOverrideConfiguration overrideConfig = config.overrideConfiguration();
         String userDefinedPrefix = overrideConfig.advancedOption(AdvancedClientOption.USER_AGENT_PREFIX);
         String userDefinedSuffix = overrideConfig.advancedOption(AdvancedClientOption.USER_AGENT_SUFFIX);
         String awsExecutionEnvironment = AwsSystemSetting.AWS_EXECUTION_ENV.getStringValue().orElse(null);
 
-        StringBuilder userAgent = new StringBuilder(software.amazon.awssdk.utils.StringUtils.trimToEmpty(userDefinedPrefix));
+        StringBuilder userAgent = new StringBuilder(StringUtils.trimToEmpty(userDefinedPrefix));
 
-        if (!UserAgentUtils.getUserAgent().equals(userDefinedPrefix)) {
-            userAgent.append(COMMA).append(UserAgentUtils.getUserAgent());
+        String systemUserAgent = UserAgentUtils.getUserAgent();
+        if (!systemUserAgent.equals(userDefinedPrefix)) {
+            userAgent.append(COMMA).append(systemUserAgent);
         }
 
-        if (StringUtils.hasValue(userDefinedSuffix)) {
+        if (!StringUtils.isEmpty(userDefinedSuffix)) {
             userAgent.append(COMMA).append(userDefinedSuffix.trim());
         }
 
-        if (StringUtils.hasValue(awsExecutionEnvironment)) {
+        if (!StringUtils.isEmpty(awsExecutionEnvironment)) {
             userAgent.append(SPACE).append(AWS_EXECUTION_ENV_PREFIX).append(awsExecutionEnvironment.trim());
         }
 
-        if (StringUtils.hasValue(userAgentMarker)) {
-            userAgent.append(SPACE).append(userAgentMarker.trim());
+        if (!StringUtils.isEmpty(requestUserAgent)) {
+            userAgent.append(SPACE).append(requestUserAgent.trim());
         }
 
         return userAgent.toString();

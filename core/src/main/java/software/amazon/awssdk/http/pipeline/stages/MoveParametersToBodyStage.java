@@ -27,6 +27,7 @@ import software.amazon.awssdk.http.SdkHttpFullRequest;
 import software.amazon.awssdk.http.SdkHttpMethod;
 import software.amazon.awssdk.http.pipeline.MutableRequestToRequestPipeline;
 import software.amazon.awssdk.interceptor.AwsExecutionAttributes;
+import software.amazon.awssdk.utils.CollectionUtils;
 import software.amazon.awssdk.utils.http.SdkHttpUtils;
 
 @ReviewBeforeRelease("Might only need to do this for certain protocols - ie query?")
@@ -45,8 +46,7 @@ public final class MoveParametersToBodyStage implements MutableRequestToRequestP
         return notSimpleDb(context) &&
                input.method() == SdkHttpMethod.POST &&
                input.content() == null &&
-               input.rawQueryParameters() != null &&
-               input.rawQueryParameters().size() > 0;
+               !CollectionUtils.isNullOrEmpty(input.rawQueryParameters());
     }
 
     // TODO FIXME hacky hack

@@ -279,9 +279,10 @@ public class Aws4Signer extends AbstractAwsSigner
                                         SignerConstants.LINE_SEPARATOR +
                                         getCanonicalizedQueryString(request.rawQueryParameters()) +
                                         SignerConstants.LINE_SEPARATOR +
-                                        getCanonicalizedHeaderString(request) +
+                                        getCanonicalizedHeaderString(request.headers()) +
                                         SignerConstants.LINE_SEPARATOR +
-                                        getSignedHeadersString(request) + SignerConstants.LINE_SEPARATOR +
+                                        getSignedHeadersString(request.headers()) +
+                                        SignerConstants.LINE_SEPARATOR +
                                         contentSha256;
 
         if (LOG.isDebugEnabled()) {
@@ -377,7 +378,7 @@ public class Aws4Signer extends AbstractAwsSigner
         String signingCredentials = credentials.accessKeyId() + "/" + signerParams.getScope();
         String credential = "Credential=" + signingCredentials;
         String signerHeaders = "SignedHeaders=" +
-                               getSignedHeadersString(signerParams.httpRequest());
+                               getSignedHeadersString(signerParams.httpRequest().headers());
         String signatureHeader = "Signature=" + BinaryUtils.toHex(signature);
 
         return SignerConstants.AWS4_SIGNING_ALGORITHM + " " + credential + ", " + signerHeaders + ", " + signatureHeader;
@@ -395,7 +396,7 @@ public class Aws4Signer extends AbstractAwsSigner
         mutableRequest.rawQueryParameter(SignerConstants.X_AMZ_ALGORITHM, SignerConstants.AWS4_SIGNING_ALGORITHM);
         mutableRequest.rawQueryParameter(SignerConstants.X_AMZ_DATE, timeStamp);
         mutableRequest.rawQueryParameter(SignerConstants.X_AMZ_SIGNED_HEADER,
-                                         getSignedHeadersString(signerParams.httpRequest()));
+                                         getSignedHeadersString(signerParams.httpRequest().headers()));
         mutableRequest.rawQueryParameter(SignerConstants.X_AMZ_EXPIRES,
                                          Long.toString(expirationInSeconds));
         mutableRequest.rawQueryParameter(SignerConstants.X_AMZ_CREDENTIAL, signingCredentials);
@@ -407,11 +408,11 @@ public class Aws4Signer extends AbstractAwsSigner
         mutableRequest.header(SignerConstants.X_AMZ_SECURITY_TOKEN, credentials.sessionToken());
     }
 
-    private String getCanonicalizedHeaderString(SdkHttpFullRequest.Builder request) {
-        final List<String> sortedHeaders = new ArrayList<>(request.headers().keySet());
+    private String getCanonicalizedHeaderString(Map<String, List<String>> headers) {
+        final List<String> sortedHeaders = new ArrayList<>(headers.keySet());
         sortedHeaders.sort(String.CASE_INSENSITIVE_ORDER);
 
-        final Map<String, List<String>> requestHeaders = request.headers();
+        final Map<String, List<String>> requestHeaders = headers;
         StringBuilder buffer = new StringBuilder();
         for (String header : sortedHeaders) {
             if (shouldExcludeHeaderFromSigning(header)) {
@@ -432,8 +433,8 @@ public class Aws4Signer extends AbstractAwsSigner
         return buffer.toString();
     }
 
-    private String getSignedHeadersString(SdkHttpFullRequest.Builder request) {
-        final List<String> sortedHeaders = new ArrayList<>(request.headers().keySet());
+    private String getSignedHeadersString(Map<String, List<String>> headers) {
+        final List<String> sortedHeaders = new ArrayList<>(headers.keySet());
         sortedHeaders.sort(String.CASE_INSENSITIVE_ORDER);
 
         StringBuilder buffer = new StringBuilder();
